@@ -1,0 +1,3 @@
+[submodule "fast-framework"]
+	path = fast-framework
+	url = https://github.com/dr-week/fast-framework.git
