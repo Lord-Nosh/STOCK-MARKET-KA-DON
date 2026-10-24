@@ -1,124 +1,161 @@
 from fastapi import APIRouter, Query
 from typing import Dict, Any, List
 from concurrent.futures import ThreadPoolExecutor
-from app.core.config import TRACKED_UNIVERSE
-from app.market.fetcher import fetch_nse_chart
-from app.market.sessions import get_market_session_state
-from app.strategies.intraday import evaluate_intraday_signal
-from app.strategies.delivery import evaluate_delivery_signal
-from app.news.sentiment import fetch_ticker_news
+
+from app.core.config import TRACKED_UNIVERSE, ACCOUNT_CAPITAL
+from app.departments.market_data.service import market_data_dep
+from app.departments.technical_analysis.service import technical_dep
+from app.departments.fundamental_analysis.service import fundamental_dep
+from app.departments.market_intelligence.service import market_intelligence_dep
+from app.departments.signal_risk.service import signal_risk_dep
+
+from app.backtesting.backtest_engine import run_historical_backtest
+from app.db.database import record_analysis_tree, get_tree_history
+from app.db.backup import backup_service
+from app.departments.market_data.collector import collector_service
 
 router = APIRouter()
 
-def process_single_stock(stock: Dict[str, str]) -> Dict[str, Any]:
-    symbol, name, sector, groww_slug = stock["symbol"], stock["name"], stock["sector"], stock["groww"]
-    
-    # 5-min intraday chart & 1-day swing chart
-    intra_chart = fetch_nse_chart(symbol, interval="5m", range_param="1d")
-    deliv_chart = fetch_nse_chart(symbol, interval="1d", range_param="3mo")
+def process_unified_stock(stock: Dict[str, str], intelligence: Dict[str, Any], capital: float = ACCOUNT_CAPITAL) -> Dict[str, Any]:
+    symbol = stock["symbol"]
+    ticker = stock.get("ticker", f"{symbol}.NS")
+    name = stock["name"]
+    sector = stock["sector"]
+    groww_slug = stock["groww"]
 
-    if not intra_chart:
-        # Fallback realistic baseline if market is offline
-        return {
-            "symbol": symbol,
-            "name": name,
-            "sector": sector,
-            "current_price": 1000.0,
-            "change_pct": 0.0,
-            "day_high": 1020.0,
-            "day_low": 990.0,
-            "groww_url": f"https://groww.in/stocks/{groww_slug}",
-            "intraday": {
-                "signal": "HOLD / WATCH",
-                "confidence": 50,
-                "entry": 1000.0,
-                "target_1": 1015.0,
-                "target_2": 1025.0,
-                "stop_loss": 990.0,
-                "vwap": 1000.0,
-                "rsi": 50.0,
-                "ema_9": 1000.0,
-                "ema_21": 1000.0,
-                "atr": 10.0,
-                "sparkline": [995, 998, 1000, 1002, 1000],
-                "reasons": ["Awaiting fresh market ticks"]
-            },
-            "delivery": {
-                "signal": "ACCUMULATE / HOLD",
-                "confidence": 60,
-                "target": 1080.0,
-                "stop_loss": 950.0,
-                "ema_20": 980.0,
-                "ema_50": 960.0,
-                "rsi": 52.0,
-                "reasons": ["Base consolidation"]
-            },
-            "news": []
+    # 1. Market Data Department (Shared Data Layer)
+    m_data = market_data_dep.get_stock_data(symbol, ticker)
+    if not m_data:
+        m_data = {
+            "symbol": symbol, "ticker": ticker, "current_price": 1000.0, "change_pct": 0.0,
+            "day_high": 1010.0, "day_low": 990.0, "volume_today": 100000,
+            "candles_5m": {"opens": [], "highs": [], "lows": [], "closes": [], "volumes": []},
+            "candles_daily": {"closes": []}
         }
 
-    meta = intra_chart.get("meta", {})
-    price = meta.get("regularMarketPrice", 0.0)
-    prev_close = meta.get("previousClose", price)
-    change_pct = round(((price - prev_close) / prev_close) * 100, 2) if prev_close else 0.0
+    # 2. Technical Analysis Department
+    technicals = technical_dep.analyze(m_data)
 
-    # Extract 5m candles
-    quote = intra_chart.get("indicators", {}).get("quote", [{}])[0]
-    closes = [c for c in quote.get("close", []) if c is not None]
-    highs = [h for h in quote.get("high", []) if h is not None]
-    lows = [l for l in quote.get("low", []) if l is not None]
-    volumes = [v for v in quote.get("volume", []) if v is not None]
+    # 3. Fundamental Analysis Department
+    fundamentals = fundamental_dep.analyze(symbol, name)
 
-    # Extract daily closes
-    deliv_closes = []
-    if deliv_chart:
-        d_quote = deliv_chart.get("indicators", {}).get("quote", [{}])[0]
-        deliv_closes = [c for c in d_quote.get("close", []) if c is not None]
-
-    intraday_plan = evaluate_intraday_signal(price, highs, lows, closes, volumes)
-    delivery_plan = evaluate_delivery_signal(price, deliv_closes)
-    news_items = fetch_ticker_news(symbol, name)
+    # 4. Signal & Risk Engine Department (Final Decision Synthesis)
+    decision = signal_risk_dep.synthesize_decision(
+        market_data=m_data,
+        technicals=technicals,
+        fundamentals=fundamentals,
+        intelligence=intelligence,
+        capital=capital
+    )
 
     return {
         "symbol": symbol,
         "name": name,
         "sector": sector,
-        "current_price": price,
-        "change_pct": change_pct,
-        "day_high": meta.get("regularMarketDayHigh", price),
-        "day_low": meta.get("regularMarketDayLow", price),
+        "current_price": m_data["current_price"],
+        "change_pct": m_data["change_pct"],
+        "day_high": m_data["day_high"],
+        "day_low": m_data["day_low"],
         "groww_url": f"https://groww.in/stocks/{groww_slug}",
-        "intraday": intraday_plan,
-        "delivery": delivery_plan,
-        "news": news_items
+        # Department outputs clearly separated
+        "market_data": {
+            "volume_today": m_data["volume_today"],
+            "timestamp": m_data.get("timestamp", 0)
+        },
+        "technicals": technicals,
+        "fundamentals": fundamentals,
+        "signal_decision": decision,
+        # Backward-compatible intraday accessor
+        "intraday": {
+            "signal": decision["signal"],
+            "confluence_score": decision["confluence_score"],
+            "confidence": decision["confidence"],
+            "entry": decision["entry"],
+            "target_1": decision["target_1"],
+            "target_2": decision["target_2"],
+            "stop_loss": decision["stop_loss"],
+            "vwap": technicals["vwap"],
+            "rsi": technicals["rsi"],
+            "ema_9": technicals["ema_9"],
+            "ema_21": technicals["ema_21"],
+            "atr": technicals["atr"],
+            "adx": technicals["adx"],
+            "rvol": technicals["rvol"],
+            "sparkline": technicals["sparkline"],
+            "market_structure": technicals["market_structure"],
+            "supply_demand": technicals["supply_demand"],
+            "key_candle": technicals["key_candle"],
+            "risk_sizing": decision["risk_sizing"],
+            "reasons": decision["reasons"]
+        },
+        "news": fundamentals["news"]
     }
 
-@router.get("/session")
-def session_status():
-    return get_market_session_state()
-
-@router.get("/stocks")
-def list_stocks():
-    return TRACKED_UNIVERSE
+@router.get("/overview")
+def get_overview():
+    """Returns top-level market overview and intelligence"""
+    intelligence = market_intelligence_dep.get_intelligence()
+    return intelligence
 
 @router.get("/scan")
-def scan_market(filter_type: str = Query("all", enum=["all", "intraday_buy", "intraday_sell", "delivery_buy"])):
-    # Concurrent threaded fetch for sub-second response
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        results = list(executor.map(process_single_stock, TRACKED_UNIVERSE))
+def scan_all(capital: float = Query(ACCOUNT_CAPITAL)):
+    """Runs parallel scan through all 6 departments"""
+    intelligence = market_intelligence_dep.get_intelligence()
     
-    if filter_type == "intraday_buy":
-        results = [r for r in results if r.get("intraday") and "BUY" in r["intraday"]["signal"]]
-    elif filter_type == "intraday_sell":
-        results = [r for r in results if r.get("intraday") and ("SELL" in r["intraday"]["signal"] or "SHORT" in r["intraday"]["signal"])]
-    elif filter_type == "delivery_buy":
-        results = [r for r in results if r.get("delivery") and "BUY" in r["delivery"]["signal"]]
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        results = list(executor.map(lambda s: process_unified_stock(s, intelligence, capital=capital), TRACKED_UNIVERSE))
 
-    # Default sort by confidence score
-    results.sort(key=lambda x: (x.get("intraday", {}).get("confidence", 0)), reverse=True)
-    return {"session": get_market_session_state(), "count": len(results), "results": results}
+    # Snapshot to database tree
+    try:
+        record_analysis_tree(
+            market_phase=intelligence["session"]["phase"],
+            ist_time=intelligence["session"]["ist_time"],
+            stocks_data=results
+        )
+    except Exception as e:
+        print(f"[DB Warning]: {e}")
+
+    # Default sort by confluence score
+    results.sort(key=lambda x: (x.get("signal_decision", {}).get("confluence_score", 0)), reverse=True)
+
+    return {
+        "intelligence": intelligence,
+        "count": len(results),
+        "results": results
+    }
 
 @router.get("/stock/{symbol}")
-def single_stock(symbol: str):
+def get_single_stock(symbol: str, capital: float = Query(ACCOUNT_CAPITAL)):
     sym = symbol.upper()
     stock = next((s for s in TRACKED_UNIVERSE if s["symbol"] == sym), {"symbol": sym, "name": sym, "sector": "NSE", "groww": sym.lower()})
-    return process_single_stock(stock)
+    intelligence = market_intelligence_dep.get_intelligence()
+    return process_unified_stock(stock, intelligence, capital=capital)
+
+@router.get("/backtest/{symbol}")
+def backtest(symbol: str, days: int = Query(5, ge=1, le=30)):
+    return run_historical_backtest(symbol.upper(), days)
+
+@router.get("/tree-history")
+def tree_history(limit: int = Query(10, ge=1, le=50)):
+    return get_tree_history(limit)
+
+@router.post("/system/backup")
+def trigger_system_backup():
+    """Trigger an atomic point-in-time snapshot backup of the database."""
+    return backup_service.create_snapshot_backup()
+
+@router.get("/system/backups")
+def list_system_backups():
+    """List available database backups and point-in-time recovery archives."""
+    return {"backups": backup_service.list_backups()}
+
+@router.get("/system/feed-health/{symbol}")
+def check_feed_health(symbol: str):
+    """Check health and freshness of the market feed for a given symbol."""
+    is_healthy, status = collector_service.check_feed_health(symbol.upper())
+    return {
+        "symbol": symbol.upper(),
+        "is_healthy": is_healthy,
+        "status": status,
+        "active_provider": collector_service.active_provider
+    }
