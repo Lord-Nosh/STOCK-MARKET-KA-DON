@@ -1,0 +1,122 @@
+NEXT STEPS QUESTIONS
+Stock Market Ka Don (SMKD)
+Snapshot date supplied: 2026-10-24 20:12 +05:30
+
+============================================================
+CURRENT SOFTWARE SNAPSHOT
+============================================================
+
+Area: Repository
+Status: Pushed to GitHub (main branch)
+Observation: All files present; submodule fast-framework correctly added.
+
+Area: README
+Status: Enterprise-grade README
+Observation: Danger Labs branding, architecture diagram, and issue links.
+
+Area: Frontend
+Status: New UI components added (stock-bot-ui)
+Observation: Uses Zuari Zero-VDOM, built with Vite/PNPM.
+
+Area: Backend
+Status: New modules added
+Observation: AI, back-testing, data-layers, and expanded department services.
+
+Area: Git History
+Status: Clean commits reported
+Observation: Initial import, README, UI update, backend feature set.
+
+Area: Issues
+Status: Issue tracking in progress
+Observation: The supplied snapshot reported three tracking issues (rate-limit, broker API, slippage) and no labels or milestones. The tracker was subsequently updated: three existing issues were revised and five additional issues were created. Current issue tracker: https://github.com/dr-week/STOCK-MARKET-KA-DON/issues
+
+Area: Tests / CI
+Status: Unknown / not detected in the supplied snapshot
+Observation: No test suite, GitHub Actions, or linting pipeline detected in the initial review.
+
+Area: Documentation
+Status: Architecture sketch, docs folder, and API specification in README
+Observation: Could benefit from generated API reference (OpenAPI) and a CONTRIBUTING guide.
+
+Area: Security
+Status: Unknown
+Observation: No explicit secret scanning or dependency audit confirmed.
+
+Area: Deployment
+Status: Unknown
+Observation: No Dockerfile, Helm chart, or CI/CD workflow confirmed in the snapshot.
+
+============================================================
+NEXT-STEPS QUESTION CATALOG
+============================================================
+
+1. PROJECT PLANNING & SCOPE
+1. What are the top three business objectives we want the next release to achieve?
+2. Which user personas (trader, analyst, developer) should be prioritized for new features?
+3. Do we need a roadmap (e.g., Q4 2026 milestones) and are we using a project-management board (GitHub Projects, JIRA, etc.)?
+
+2. FEATURE DEVELOPMENT
+4. Which of the newly added backend modules (AI, back-testing, market-data services) require unit / integration tests first?
+5. Do we want to expose the AI module via a new REST endpoint or keep it internal for now?
+6. Is there a need for a configuration UI (e.g., selecting risk parameters) in the frontend?
+7. Should we add support for additional brokers (Zerodha, Angel One) beyond Groww?
+
+3. QUALITY & TESTING
+8. What test coverage target (e.g., 80% line coverage) are we aiming for?
+9. Which testing framework(s) will we adopt for Python (pytest, coverage) and for TypeScript (vitest, playwright)?
+10. Do we need performance benchmarks for the real-time intraday engine (latency < 10 ms per tick)?
+11. How will we validate no-repaint guarantees on closed-candle signals?
+
+4. CI / CD & AUTOMATION
+12. Should we add a GitHub Actions pipeline for linting, testing, and building the UI?
+13. Do we need a Docker image for the backend (FastAPI) and one for the frontend (Vite) to simplify deployments?
+14. Would a staging environment (e.g., on GCP Cloud Run) help before production pushes?
+
+5. DOCUMENTATION & ONBOARDING
+15. Is a CONTRIBUTING.md needed to formalize code-style, commit-message conventions, and PR review flow?
+16. Should we generate an OpenAPI spec from FastAPI and publish it via Swagger UI?
+17. Do we want an architecture decision record (ADR) series to capture design rationales?
+
+6. ISSUE & PROJECT MANAGEMENT
+18. Which labels (e.g., bug, enhancement, performance, security) should we introduce for all issues?
+19. Do we assign milestones (v1.0, v2.0) to the existing issues and any future ones?
+20. Are there any backlog grooming sessions scheduled to triage feature requests?
+
+7. SECURITY & COMPLIANCE
+21. Have we run a dependency-vulnerability scan (e.g., pip-audit, npm audit) on the repo?
+22. Are there any secret-leak checks (GitGuardian, truffleHog) required for the newly added AI/back-testing directories?
+23. Do we need license compliance verification beyond the MIT license (third-party assets, icons, fonts)?
+
+8. DEPLOYMENT & OPERATIONS
+24. What is the target runtime environment (VM, Kubernetes, Cloud Run, serverless) for the backend?
+25. Do we need monitoring/alerting (Prometheus, Grafana) for the live trading engine?
+26. How will we handle log retention and audit trails for compliance?
+
+9. COMMUNITY & OUTREACH
+27. Should we create a GitHub Discussions space for users to ask questions or share strategies?
+28. Are we planning a demo video or a product landing page to showcase the platform?
+29. Do we need a changelog (keepachangelog.com format) for each release?
+
+10. FUTURE-PROOFING
+30. Would integrating WebSocket market data (official NSE / broker streams) be part of the next major version?
+31. Is machine-learning model versioning (MLflow, DVC) required for the AI module?
+32. Should we explore event-driven architecture (Kafka, Pub/Sub) for scaling signal distribution?
+
+============================================================
+HOW TO USE THIS LIST
+============================================================
+
+1. Copy this file into the repo root and refer to it during sprint planning, code reviews, or stakeholder meetings.
+2. Prioritize questions by business impact and effort.
+3. Create GitHub Issues for selected questions (or group related ones); assign labels, owners, and milestones.
+4. Schedule a planning meeting (e.g., weekly) and turn the highest-priority questions into actionable tasks.
+
+============================================================
+RELATED LINKS
+============================================================
+
+Repository: https://github.com/dr-week/STOCK-MARKET-KA-DON
+GitHub Issues: https://github.com/dr-week/STOCK-MARKET-KA-DON/issues
+Framework submodule: https://github.com/dr-week/fast-framework
+
+Note: This file is a planning checklist. Status entries are observations from the supplied snapshot, not proof that builds, tests, live feeds, security scans, or deployments have succeeded.
