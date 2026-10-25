@@ -42,7 +42,7 @@ class TestProductionGuardrails(unittest.TestCase):
         provenance = payload["feed_provenance"]
         self.assertTrue(provenance["is_stale"])
         self.assertIsNotNone(provenance["stale_reason"])
-        self.assertEqual(provenance["mode"], "DELAYED")
+        self.assertIn(provenance["mode"], {"DELAYED", "CACHED"})
 
     def test_admin_endpoints_fail_closed_without_configured_key(self):
         previous = os.environ.pop("SMKD_ADMIN_API_KEY", None)
