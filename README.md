@@ -1,7 +1,7 @@
 <div align="center">
 
 # ⚡ STOCK MARKET KA DON (SMKD)
-### High-Performance Algorithmic Trading Intelligence Engine for Indian Equities (NSE)
+### Research and paper-trading signal engine for Indian equities (NSE)
 
 [![Danger Labs](https://img.shields.io/badge/Engineered%20By-Danger%20Labs-ff0055?style=for-the-badge&logo=shield&logoColor=white)](#-designed--engineered-by-danger-labs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
@@ -12,7 +12,7 @@
 [![NSE India](https://img.shields.io/badge/Exchange-NSE%20India-FF6B6B?style=for-the-badge)](https://www.nseindia.com)
 
 <p align="center">
-  <b>A production-grade, micro-latency market analysis engine and decision-support terminal built specifically for National Stock Exchange (NSE) equities, covering Intraday (MIS) and Positional Swing (CNC) executions.</b>
+  <b>A research-oriented market-analysis and decision-support terminal for National Stock Exchange (NSE) equities. Market signals are not broker-verified instructions and this project is not cleared for live-money trading.</b>
 </p>
 
 [Key Features](#-key-features) • [System Architecture](#-system-architecture) • [Trading Strategies](#-trading-engine--strategy-matrix) • [Quick Start](#-quick-start--installation) • [API Reference](#-api-specification) • [Limitations & Disclaimer](#-limitations--known-constraints)
@@ -21,9 +21,9 @@
 
 </div>
 
-## 🏢 Designed & Engineered by Danger Labs
+## 🧭 Fork Maintainer & Upstream Credit
 
-**Stock Market Ka Don (SMKD)** was architected and built by **Danger Labs**, an elite engineering research and quantitative trading systems lab. Danger Labs designs mission-critical algorithmic software, high-frequency signal pipelines, and low-latency reactive frontends.
+**This fork is maintained by [@Lord-Nosh](https://github.com/Lord-Nosh).** It is derived from the upstream Stock Market Ka Don project created by **Danger Labs / [@dr-week](https://github.com/dr-week)**. Retain upstream attribution and the project license; this fork focuses first on data integrity, risk guardrails, and operational safety.
 
 > *"Precision over hype. Mathematical expectancy over speculation."* — **Danger Labs Core Philosophy**
 
@@ -31,31 +31,31 @@
 
 ## 👨‍💻 Creator, Maintainers & Contributors
 
-**Created and maintained by [Danger Labs](https://github.com/dr-week).**
+**Fork maintainer: [@Lord-Nosh](https://github.com/Lord-Nosh). Upstream project: [Danger Labs / @dr-week](https://github.com/dr-week).**
 
 SMKD is an evolving market-analysis and trading research project. Contributions, reproducible bug reports, test improvements, documentation fixes, and thoughtful feature proposals are welcome.
 
 - **Creator / maintainer:** [@dr-week](https://github.com/dr-week)
-- **Report a bug:** [Open an issue](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues/new)
-- **Suggest an improvement:** [Feature requests](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues)
-- **Contribute code:** [Open a pull request](https://github.com/dr-week/STOCK-MARKET-KA-DON/pulls)
+- **Report a bug:** [Open an issue](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/issues/new)
+- **Suggest an improvement:** [Feature requests](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/issues)
+- **Contribute code:** [Open a pull request](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/pulls)
 - **Contribution guide:** [CONTRIBUTING.md](CONTRIBUTING.md) *(add this file if it does not exist)*
 
 ### Repository activity
 
-[![Stars](https://img.shields.io/github/stars/dr-week/STOCK-MARKET-KA-DON?style=social)](https://github.com/dr-week/STOCK-MARKET-KA-DON/stargazers)
-[![Forks](https://img.shields.io/github/forks/dr-week/STOCK-MARKET-KA-DON?style=social)](https://github.com/dr-week/STOCK-MARKET-KA-DON/forks)
-[![Issues](https://img.shields.io/github/issues/dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues)
-[![Pull Requests](https://img.shields.io/github/issues-pr/dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/pulls)
-[![Last Commit](https://img.shields.io/github/last-commit/dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/commits/main)
+[![Stars](https://img.shields.io/github/stars/dr-week/STOCK-MARKET-KA-DON?style=social)](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/stargazers)
+[![Forks](https://img.shields.io/github/forks/dr-week/STOCK-MARKET-KA-DON?style=social)](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/forks)
+[![Issues](https://img.shields.io/github/issues/dr-week/STOCK-MARKET-KA-DON)](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/dr-week/STOCK-MARKET-KA-DON)](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/pulls)
+[![Last Commit](https://img.shields.io/github/last-commit/dr-week/STOCK-MARKET-KA-DON)](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/commits/main)
 
 ### Meet the contributors
 
 Contributions are credited through GitHub's contributor history.
 
-[![Contributors](https://contrib.rocks/image?repo=dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=dr-week/STOCK-MARKET-KA-DON)](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/graphs/contributors)
 
-[View all contributors](https://github.com/dr-week/STOCK-MARKET-KA-DON/graphs/contributors) · [View commit history](https://github.com/dr-week/STOCK-MARKET-KA-DON/commits/main) · [View releases](https://github.com/dr-week/STOCK-MARKET-KA-DON/releases)
+[View all contributors](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/graphs/contributors) · [View commit history](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/commits/main) · [View releases](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/releases)
 
 ### How to contribute
 
@@ -66,11 +66,13 @@ Contributions are credited through GitHub's contributor history.
 5. Do not introduce simulated market data into live application paths.
 6. Clearly state what you tested and what remains unverified.
 
-All market-data, signal-generation, and trading-related changes must preserve the project's safety and data-integrity requirements. See the [Issues](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues) and [Pull Requests](https://github.com/dr-week/STOCK-MARKET-KA-DON/pulls) pages before contributing.
+All market-data, signal-generation, and trading-related changes must preserve the project's safety and data-integrity requirements. See the [Issues](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/issues) and [Pull Requests](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/pulls) pages before contributing.
 
 ---
 
 ## 📌 Executive Summary
+
+> **Production status:** research-only until a licensed broker/exchange market-data adapter, regression tests, deployment controls, and paper-trading validation are completed. The current public Yahoo Finance chart integration is explicitly unverified and cannot emit execution-eligible BUY/SELL signals.
 
 **SMKD** solves the core challenges faced by active retail and prop traders in Indian markets: execution lag, cognitive overload, emotional whipsaws, and scam-ridden signal services that ignore market friction and repainting. 
 
@@ -84,7 +86,7 @@ By unifying **closed-candle mathematical indicators**, **live Indian financial n
 |:---|:---|:---|
 | **Intraday Engine (MIS)** | 5-Minute Timeframe Multi-Indicator Confluence | VWAP + 9/21 Dual EMA + 14-period RSI + ATR Dynamic Volatility Bands |
 | **Delivery Engine (CNC)** | Daily / Multi-Week Positional Swing Scanner | Golden/Death Crossover (20/50 EMA), Volume Accumulation & Stage-2 Breakouts |
-| **News Catalyst NLP** | Live Real-time Sentiment Scraper | RSS pipeline parsing Indian business feeds (Moneycontrol, Mint, ET) with tone scoring |
+| **News Catalyst NLP** | RSS-based sentiment research | RSS pipeline parsing Indian business feeds (Moneycontrol, Mint, ET); latency and source coverage are not guaranteed |
 | **Zero-VDOM UI Terminal** | Built on Danger Labs' `@zuari` signals system | Sub-millisecond reactive DOM mutations without the overhead of heavy Virtual-DOM engines |
 | **Trap Avoidance Engine** | Strict IST Market Session Filter | Flags 9:15–9:45 AM opening traps and blocks low-liquidity noon chop zones |
 | **One-Click Broker Deep Links**| Instant Contextual Execution Linkage | Directly opens pre-configured symbol order cards on Groww Web/Mobile |
@@ -99,7 +101,7 @@ SMKD is engineered as an event-driven decoupled ecosystem:
 flowchart TD
     subgraph MarketData ["NSE Market Feeds"]
         direction TB
-        NSE["Live Ticker Feed (NSE .NS)"]
+        NSE["Public Yahoo Finance chart data (unverified)"]
         NEWS["Financial News RSS Feeds"]
     end
 
@@ -122,7 +124,7 @@ flowchart TD
     end
 
     subgraph Execution ["Direct Execution"]
-        Groww["Groww Terminal Direct Deep-Link"]
+        Groww["Groww order page (manual confirmation only)"]
     end
 
     NSE --> Fetcher
@@ -161,16 +163,16 @@ flowchart TD
 
 ## 📊 Trading Engine & Strategy Matrix
 
-### 1. Intraday Momentum Strategy (`Groww MIS`)
+### 1. Intraday Momentum Strategy (`Groww MIS`) — research only
 * **Timeframe**: 5-Minute closed candles (Strict anti-repainting policy).
 * **Confluence Rules**:
   * **Long Entry**: Price > VWAP, 9-EMA > 21-EMA, RSI between 55 and 70 (Momentum acceleration without exhaustion).
   * **Short Entry**: Price < VWAP, 9-EMA < 21-EMA, RSI between 30 and 45.
 * **Risk Parameters**:
-  * Automated stop-loss pegged to recent swing extremes or $1.5 \times \text{ATR}$.
-  * Mandatory minimum Target:Risk ratio of **1:2** to guarantee positive expectancy.
+  * Illustrative stop-loss pegged to recent swing extremes or $1.5 \times \text{ATR}$.
+  * Targets aim for at least **2:1 reward-to-risk**; this ratio does not guarantee positive expectancy or limit gap loss.
 
-### 2. Positional Swing Strategy (`Groww CNC`)
+### 2. Positional Swing Strategy (`Groww CNC`) — research only
 * **Timeframe**: Daily candle confirmation.
 * **Confluence Rules**:
   * 20-Day EMA above 50-Day EMA (Golden Trend Confirmation).
@@ -178,8 +180,8 @@ flowchart TD
 * **Holding Horizon**: 3 to 15 trading days.
 
 ### 3. Anti-Scam & Risk Management Guardrails
-* **No Unrealistic Claims**: High-frequency quant funds run between **55% to 65% win rates**. Anyone claiming 90%+ is selling curve-fitted or repainting algorithms.
-* **Friction Awareness**: Filters out all micro-moves $< 0.7\%$ to guarantee trades remain profitable after STT, GST (18%), exchange turnover fees, SEBI charges, and broker commission.
+* **No Unrealistic Claims**: Win rate alone does not establish an edge. Validate with out-of-sample data, realistic costs, slippage, drawdown analysis, and paper trading before considering live deployment.
+* **Friction Awareness**: Uses estimated transaction-cost assumptions to reason about small moves. Actual charges vary by segment, side, broker, and order type; no filter can guarantee profitability.
 * **Liquid Universe Only**: Scans only **F&O eligible constituent stocks** (Nifty 100) to protect capital against illiquid 5% circuit freezes and auction penalties.
 
 ---
@@ -201,7 +203,7 @@ Run the root supervisor script:
 
 #### Step 1: Clone with Submodules
 ```bash
-git clone --recurse-submodules https://github.com/dr-week/STOCK-MARKET-KA-DON.git
+git clone --recurse-submodules https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON.git
 cd STOCK-MARKET-KA-DON
 ```
 
@@ -237,12 +239,12 @@ pnpm run dev
 
 ## ⚠️ Limitations & Known Constraints
 
-Active issues, architectural constraints, and enhancement roadmaps are tracked transparently in the **[GitHub Issues tab](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues)**:
+Active issues, architectural constraints, and enhancement roadmaps are tracked transparently in the **[GitHub Issues tab](https://github.com/Lord-Nosh/STOCK-MARKET-KA-DON/issues)**:
 
-1. **Third-Party Rate Limits**: Upstream Yahoo Finance / unofficial tick providers may enforce intermittent rate limits during high market volatility. Integration of official broker WebSocket APIs (Zerodha Kite Connect / Groww API) is planned.
-2. **Delayed Indian Feed on Free Endpoints**: Free upstream data tiers may experience a 1–2 minute delay. Production deployments should attach a paid low-latency market data feed.
+1. **Unverified public market data**: The current Yahoo Finance chart endpoint is not a broker-authoritative live feed. This fork marks it as research-only and blocks execution-eligible signals. Integrate and validate a licensed broker/exchange feed before paper/live execution.
+2. **Provider latency**: Data can be delayed, incomplete, cached, throttled, or unavailable. Delay is provider- and instrument-dependent and is not guaranteed.
 3. **Automated Order Placement Requires Broker Credentials**: Currently provides verified direct deep-links to Groww order tickets; automated non-supervised trade execution requires active TOTP broker authorization.
-4. **Execution Slippage**: Rapid gap openings between 9:15 AM and 9:20 AM may cause execution price variance from calculated entry prices.
+4. **Execution slippage**: The backtest has not been established as a production execution simulator. Opening gaps, market impact, partial fills, and latency can make realized execution materially different from calculated levels.
 
 ---
 
