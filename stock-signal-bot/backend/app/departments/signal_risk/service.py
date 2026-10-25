@@ -152,6 +152,15 @@ class SignalRiskDepartment:
             capital=capital
         )
 
+        # A high confluence score is not enough: block candidate signals when
+        # sizing violates the defined risk budget or the minimum reward ratio.
+        if signal_state in {"BUY CANDIDATE", "SELL CANDIDATE"} and not risk_profile.get("trade_allowed", False):
+            signal_state = "WAIT"
+            reasons = list(reasons) + [
+                "Risk guard blocked this candidate: "
+                + str(risk_profile.get("rejection_reason") or "POSITION_SIZE_NOT_ALLOWED")
+            ]
+
         return {
             "signal": signal_state,
             "confluence_score": total_score,
