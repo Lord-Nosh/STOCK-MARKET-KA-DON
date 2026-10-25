@@ -1,4 +1,4 @@
-package com.disha.donengine;
+package com.lordnosh.smkd;
 
 import com.getcapacitor.BridgeActivity;
 

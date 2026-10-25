@@ -1,0 +1,35 @@
+name: Backend tests
+
+on:
+  push:
+    branches:
+      - main
+      - hardening/production-readiness-v1
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: stock-signal-bot/backend/requirements.txt
+
+      - name: Install dependencies
+        working-directory: stock-signal-bot/backend
+        run: python -m pip install -r requirements.txt
+
+      - name: Run unit and regression tests
+        working-directory: stock-signal-bot/backend
+        run: python -m unittest discover -s app/tests -p "test_*.py" -v

@@ -45,9 +45,14 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Backup database snapshots
-stock-signal-bot/backend/app/backups/**/*.db.gz
-stock-signal-bot/backend/app/backups/**/*.json
+# Runtime SQLite databases and sidecar files (never commit user/runtime data)
+stock-signal-bot/backend/app/data/*.db
+stock-signal-bot/backend/app/data/*.db-shm
+stock-signal-bot/backend/app/data/*.db-wal
+
+# Generated backups and manifests (never commit local paths or runtime snapshots)
+stock-signal-bot/backend/app/backups/*
+!stock-signal-bot/backend/app/backups/.gitkeep
 
 # Runtime diagnostics (generated logs, crash bundles)
 .runtime/

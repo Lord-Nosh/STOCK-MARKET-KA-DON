@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">don-engine</string>
-    <string name="title_activity_main">don-engine</string>
-    <string name="package_name">com.disha.donengine</string>
-    <string name="custom_url_scheme">com.disha.donengine</string>
+    <string name="app_name">Stock Market Ka Don</string>
+    <string name="title_activity_main">Stock Market Ka Don</string>
+    <string name="package_name">com.lordnosh.smkd</string>
+    <string name="custom_url_scheme">com.lordnosh.smkd</string>
 </resources>

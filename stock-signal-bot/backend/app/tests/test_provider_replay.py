@@ -1,7 +1,8 @@
 import os
 import unittest
 from app.departments.market_data.service import MarketDataDepartment
-from app.indicators.technicals import calculate_rsi, calculate_ema
+from app.indicators.technicals import calculate_rsi
+
 
 class TestMarketDataReplay(unittest.TestCase):
     def setUp(self):
@@ -16,36 +17,37 @@ class TestMarketDataReplay(unittest.TestCase):
             os.environ.pop("SMKD_DATA_MODE", None)
 
     def test_replay_valid_5m_fixture(self):
-        """Verifies deterministic parsing and calculations using offline replay fixture"""
+        """Valid fixture candles remain aligned and usable for research."""
         data = self.service.get_stock_data("RELIANCE", "RELIANCE.NS")
         self.assertIsNotNone(data)
         self.assertEqual(data["symbol"], "RELIANCE")
         self.assertEqual(data["current_price"], 2985.50)
-        self.assertEqual(len(data["candles_5m"]["closes"]), 15)
+        candles = data["candles_5m"]
+        self.assertEqual(len(candles["closes"]), 15)
+        self.assertEqual(len(candles["timestamps"]), 15)
+        self.assertEqual(len(candles["opens"]), len(candles["highs"]))
+        self.assertEqual(len(candles["highs"]), len(candles["lows"]))
+        self.assertEqual(len(candles["lows"]), len(candles["closes"]))
+        self.assertEqual(len(candles["closes"]), len(candles["volumes"]))
+        self.assertFalse(data["signal_eligible"])
+        self.assertEqual(data["data_mode"], "SIMULATED")
 
-        # Technical indicators calculate deterministically
-        rsi = calculate_rsi(data["candles_5m"]["closes"])
+        rsi = calculate_rsi(candles["closes"])
         self.assertIsNotNone(rsi)
         self.assertGreater(rsi, 0.0)
         self.assertLess(rsi, 100.0)
 
-    def test_replay_empty_history_fixture(self):
-        """Verifies graceful handling of empty candles fixture"""
+    def test_replay_empty_history_is_rejected(self):
+        """An empty candle set must not be turned into a stock signal payload."""
         data = self.service.get_stock_data("INFY", "INFY.NS")
-        self.assertIsNotNone(data)
-        self.assertEqual(len(data["candles_5m"]["closes"]), 0)
+        self.assertIsNone(data)
+        self.assertIsNone(calculate_rsi([]))
 
-        # RSI returns None when insufficient candles
-        rsi = calculate_rsi(data["candles_5m"]["closes"])
-        self.assertIsNone(rsi)
-
-    def test_replay_malformed_fixture_filters_nulls(self):
-        """Verifies null values in OHLCV stream are stripped safely"""
+    def test_replay_malformed_candles_are_rejected_as_rows(self):
+        """A candle is accepted/rejected as a full row; individual arrays never drift."""
         data = self.service.get_stock_data("TCS", "TCS.NS")
-        self.assertIsNotNone(data)
-        # 1 out of 3 closes was null in TCS fixture
-        self.assertEqual(len(data["candles_5m"]["closes"]), 2)
-        self.assertNotIn(None, data["candles_5m"]["closes"])
+        self.assertIsNone(data)  # Each row has at least one missing OHLCV field.
+
 
 if __name__ == "__main__":
     unittest.main()
