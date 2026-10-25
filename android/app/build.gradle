@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.disha.donengine"
+    namespace = "com.lordnosh.smkd"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.disha.donengine"
+        applicationId "com.lordnosh.smkd"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
