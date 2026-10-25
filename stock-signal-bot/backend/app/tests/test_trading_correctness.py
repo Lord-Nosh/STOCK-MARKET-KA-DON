@@ -4,6 +4,7 @@ from app.indicators.calculations import compute_intraday_levels, calculate_trade
 from app.departments.market_data.collector import collector_service, DataQualityStatus
 from app.departments.signal_risk.service import signal_risk_dep
 from app.db.backup import backup_service
+from app.db.database import init_db
 
 class TestTradingCorrectnessAndReliability(unittest.TestCase):
     
@@ -74,6 +75,8 @@ class TestTradingCorrectnessAndReliability(unittest.TestCase):
         self.assertEqual(c2["data_quality_status"], DataQualityStatus.GAP_DETECTED)
 
     def test_database_backup_integrity(self):
+        # Runtime databases are created by the application, not stored in Git.
+        init_db()
         """
         Reliability Test:
         - Automated snapshot backup runs atomically with gzip compression.
