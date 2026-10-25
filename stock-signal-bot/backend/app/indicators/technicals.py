@@ -4,7 +4,7 @@ from typing import List, Tuple
 def calculate_rsi(prices: List[float], period: int = 14) -> float:
     """Computes Relative Strength Index on confirmed closes"""
     if len(prices) < period + 1:
-        return 50.0
+        return None
     gains, losses = [], []
     for i in range(1, len(prices)):
         delta = prices[i] - prices[i - 1]
@@ -20,9 +20,9 @@ def calculate_rsi(prices: List[float], period: int = 14) -> float:
 def calculate_ema(prices: List[float], span: int) -> float:
     """Computes Exponential Moving Average"""
     if not prices:
-        return 0.0
+        return None
     if len(prices) < span:
-        return prices[-1]
+        return None
     multiplier = 2.0 / (span + 1.0)
     ema = prices[0]
     for p in prices[1:]:
@@ -43,7 +43,7 @@ def calculate_vwap(highs: List[float], lows: List[float], closes: List[float], v
 def calculate_atr(highs: List[float], lows: List[float], closes: List[float], period: int = 14) -> float:
     """Computes Average True Range for dynamic volatility stop-loss"""
     if len(closes) < 2:
-        return 1.0
+        return None
     tr_list = []
     for i in range(1, len(closes)):
         h, l, prev_c = highs[i], lows[i], closes[i - 1]

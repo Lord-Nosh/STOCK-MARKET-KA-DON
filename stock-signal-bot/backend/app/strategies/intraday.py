@@ -31,13 +31,14 @@ def evaluate_intraday_confluence(
             "signal": "WAIT",
             "score": 0,
             "decision": "WAIT (Insufficient data)",
-            "entry": closes[-1] if closes else 0.0,
-            "target_1": 0.0,
-            "target_2": 0.0,
-            "stop_loss": 0.0,
+            "entry": None,
+            "target_1": None,
+            "target_2": None,
+            "stop_loss": None,
             "reasons": ["Awaiting live completed candle feed"],
             "risk_analysis": {}
         }
+
 
     c_price = closes[-1]
 

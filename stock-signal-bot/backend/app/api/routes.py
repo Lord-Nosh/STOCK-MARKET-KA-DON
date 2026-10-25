@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Query
-from typing import Dict, Any, List
+from fastapi import APIRouter, Query, HTTPException, status
+from typing import Dict, Any, List, Optional
 from concurrent.futures import ThreadPoolExecutor
 
 from app.core.config import TRACKED_UNIVERSE, ACCOUNT_CAPITAL
@@ -16,7 +16,7 @@ from app.departments.market_data.collector import collector_service
 
 router = APIRouter()
 
-def process_unified_stock(stock: Dict[str, str], intelligence: Dict[str, Any], capital: float = ACCOUNT_CAPITAL) -> Dict[str, Any]:
+def process_unified_stock(stock: Dict[str, str], intelligence: Dict[str, Any], capital: float = ACCOUNT_CAPITAL) -> Optional[Dict[str, Any]]:
     symbol = stock["symbol"]
     ticker = stock.get("ticker", f"{symbol}.NS")
     name = stock["name"]
@@ -26,12 +26,8 @@ def process_unified_stock(stock: Dict[str, str], intelligence: Dict[str, Any], c
     # 1. Market Data Department (Shared Data Layer)
     m_data = market_data_dep.get_stock_data(symbol, ticker)
     if not m_data:
-        m_data = {
-            "symbol": symbol, "ticker": ticker, "current_price": 1000.0, "change_pct": 0.0,
-            "day_high": 1010.0, "day_low": 990.0, "volume_today": 100000,
-            "candles_5m": {"opens": [], "highs": [], "lows": [], "closes": [], "volumes": []},
-            "candles_daily": {"closes": []}
-        }
+        # Explicitly return None so caller knows market data was unavailable for this symbol
+        return None
 
     # 2. Technical Analysis Department
     technicals = technical_dep.analyze(m_data)
@@ -60,7 +56,9 @@ def process_unified_stock(stock: Dict[str, str], intelligence: Dict[str, Any], c
         # Department outputs clearly separated
         "market_data": {
             "volume_today": m_data["volume_today"],
-            "timestamp": m_data.get("timestamp", 0)
+            "timestamp": m_data.get("timestamp", 0),
+            "candles_5m": m_data.get("candles_5m", {}),
+            "candles_daily": m_data.get("candles_daily", {})
         },
         "technicals": technicals,
         "fundamentals": fundamentals,
@@ -99,13 +97,34 @@ def get_overview():
 
 @router.get("/scan")
 def scan_all(capital: float = Query(ACCOUNT_CAPITAL)):
-    """Runs parallel scan through all 6 departments"""
+    """Runs parallel scan through all 6 departments with partial failure resilience"""
     intelligence = market_intelligence_dep.get_intelligence()
+    failed_symbols: List[str] = []
     
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        results = list(executor.map(lambda s: process_unified_stock(s, intelligence, capital=capital), TRACKED_UNIVERSE))
+    def _safe_process(s: Dict[str, str]) -> Optional[Dict[str, Any]]:
+        try:
+            res = process_unified_stock(s, intelligence, capital=capital)
+            if res is None:
+                failed_symbols.append(s["symbol"])
+            return res
+        except Exception as e:
+            failed_symbols.append(s["symbol"])
+            return None
 
-    # Snapshot to database tree
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        raw_results = list(executor.map(_safe_process, TRACKED_UNIVERSE))
+
+    # Retain only successfully processed stocks (no synthetic data)
+    results = [r for r in raw_results if r is not None]
+
+    # If every stock in the universe failed to provide market data, return 503
+    if not results and TRACKED_UNIVERSE:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Market data unavailable for all {len(TRACKED_UNIVERSE)} tracked symbols"
+        )
+
+    # Snapshot successful stocks to database tree
     try:
         record_analysis_tree(
             market_phase=intelligence["session"]["phase"],
@@ -121,7 +140,9 @@ def scan_all(capital: float = Query(ACCOUNT_CAPITAL)):
     return {
         "intelligence": intelligence,
         "count": len(results),
-        "results": results
+        "results": results,
+        "failed_symbols": failed_symbols,
+        "is_partial": len(failed_symbols) > 0
     }
 
 @router.get("/stock/{symbol}")
@@ -129,7 +150,13 @@ def get_single_stock(symbol: str, capital: float = Query(ACCOUNT_CAPITAL)):
     sym = symbol.upper()
     stock = next((s for s in TRACKED_UNIVERSE if s["symbol"] == sym), {"symbol": sym, "name": sym, "sector": "NSE", "groww": sym.lower()})
     intelligence = market_intelligence_dep.get_intelligence()
-    return process_unified_stock(stock, intelligence, capital=capital)
+    result = process_unified_stock(stock, intelligence, capital=capital)
+    if result is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Market data unavailable for symbol {sym}"
+        )
+    return result
 
 @router.get("/backtest/{symbol}")
 def backtest(symbol: str, days: int = Query(5, ge=1, le=30)):

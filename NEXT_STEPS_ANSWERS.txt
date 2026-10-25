@@ -1,0 +1,68 @@
+## STOCK MARKET KA DON – NEXT STEPS ANSWERS
+
+**Key decisions**
+
+| Area                | Recommended decision |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| Next release        | Prioritize market-data integrity, reliable signals, and automated testing |
+| Backend testing     | `pytest` + `pytest-cov` |
+| Frontend testing    | `Vitest` + `Playwright` |
+| Coverage            | Start at 70% overall, with stronger coverage for critical trading logic |
+| CI/CD               | GitHub Actions for linting, tests, security checks, and builds |
+| Security            | Dependency audits, secret scanning, restricted CORS, secure configuration |
+| Deployment          | FastAPI container/VM + static frontend hosting |
+| Trading data        | Explicitly distinguish live, delayed, cached, simulated, stale, and unavailable data |
+| Android             | Verify the actual implementation and build before claiming APK/AAB support |
+| Future architecture | Defer Kafka, MLflow, and complex distributed infrastructure until justified |
+
+**Immediate priorities**
+
+- **P0 — Market-data integrity**
+  - Remove fabricated fallback prices and indicators. Missing market data must never look like a valid trading signal.
+- **P0 — Validate calculations**
+  - Preserve OHLCV candle alignment and reject invalid or insufficient indicator inputs.
+- **P1 — Establish a quality gate**
+  - Add regression tests and CI before expanding AI, backtesting, or Android functionality.
+- **P1 — Security and deployment**
+  - Audit dependencies and secrets, restrict production CORS, and validate configuration.
+
+---
+
+### Detailed answers to the 32 planning questions
+
+1. **Business objectives** – Deliver a production‑ready signal engine with *data integrity* and *automated testing* as the top goals.
+2. **User personas** – Primary: active retail traders; Secondary: quantitative analysts and developers.
+3. **Roadmap** – Q4 2026: data integrity & CI; Q1 2027: broker integration & Android UI; Q2 2027: AI enhancements.
+4. **Test backend modules first** – `backend/app/indicators/`, `backend/app/strategies/`, and `backend/app/market/`.
+5. **AI exposure** – Keep AI internal for now; expose via a private `/api/ai` endpoint later after security review.
+6. **Configuration UI** – Add a simple risk‑parameter panel in the Zuari UI (future sprint).
+7. **Additional brokers** – Plan Zerodha Kite Connect integration (v2.0).
+8. **Coverage target** – 70 % overall, 85 % for core calculation modules.
+9. **Testing frameworks** – Python: `pytest` + `pytest-cov`; TypeScript: `vitest` + `playwright`.
+10. **Performance benchmark** – Implement a per‑tick latency test targeting < 10 ms.
+11. **No‑repaint validation** – Add unit tests that only use closed candles; run integration test on historical data.
+12. **CONTRIBUTING.md** – Will be created (next sprint).
+13. **OpenAPI spec** – Generate via FastAPI’s built‑in schema; publish on `/docs`.
+14. **ADRs** – Create `docs/adr/` folder for architecture decisions.
+15. **Issue labels** – `bug`, `enhancement`, `performance`, `security`, `documentation`, `question`.
+16. **Milestones** – `v1.0` (data integrity), `v2.0` (broker integration), `v3.0` (AI features).
+17. **Backlog grooming** – Schedule bi‑weekly grooming on Monday.
+18. **Vulnerability scan** – Run `pip-audit` and `npm audit` in CI.
+19. **Secret‑leak checks** – Add `gitguardian` scan in CI pipeline.
+20. **License compliance** – Verify third‑party assets have compatible licenses.
+21. **Runtime environment** – Deploy FastAPI via Docker on a GCP VM; static assets on Cloud Storage.
+22. **Monitoring** – Use Prometheus + Grafana for backend metrics; frontend error tracking via Sentry.
+23. **Log retention** – Store logs in Cloud Logging with 30‑day retention policy.
+24. **GitHub Discussions** – Enable Discussions for community support.
+25. **Demo video** – Produce a short walkthrough video for the landing page.
+26. **Changelog** – Adopt Keep a Changelog format in `CHANGELOG.md`.
+27. **WebSocket market data** – Defer to v2.0 after verifying data‑integrity pipeline.
+28. **ML model versioning** – Defer MLflow integration to v3.0.
+29. **Event‑driven architecture** – Consider Kafka only if scaling beyond 10k msgs/sec.
+30. **Additional docs** – Create a user guide (`docs/user_guide.md`) and quick‑start (`docs/quick_start.md`).
+31. **Regulatory checks** – Add SEBI compliance checklist in `docs/compliance.md`.
+32. **Mobile UI improvements** – Prioritize responsive layout and touch‑friendly controls in the Zuari UI.
+
+---
+
+*These answers capture the current consensus on priorities and implementation plans. They are recommendations and have not yet been executed or verified in code.*

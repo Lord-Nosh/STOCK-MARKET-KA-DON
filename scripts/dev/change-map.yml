@@ -1,0 +1,43 @@
+# SMKD Path-to-Test Automation Map
+# Maps modified source file globs to targeted test commands and broader regressions
+
+rules:
+  - paths:
+      - "stock-signal-bot/backend/app/api/**"
+    focused_check: "python -m unittest stock-signal-bot/backend/app/tests/test_trading_correctness.py"
+    regression_checks:
+      - "python -m unittest stock-signal-bot/backend/app/tests/test_provider_replay.py"
+
+  - paths:
+      - "stock-signal-bot/backend/app/departments/market_data/**"
+    focused_check: "python -m unittest stock-signal-bot/backend/app/tests/test_provider_replay.py"
+    regression_checks:
+      - "python -m unittest stock-signal-bot/backend/app/tests/test_market_data_integrity.py"
+
+  - paths:
+      - "stock-signal-bot/backend/app/indicators/**"
+      - "stock-signal-bot/backend/app/strategies/**"
+    focused_check: "python -m unittest stock-signal-bot/backend/app/tests/test_calculations_edge_cases.py"
+    regression_checks:
+      - "python -m unittest stock-signal-bot/backend/app/tests/test_trading_correctness.py"
+
+  - paths:
+      - "fast-framework/packages/stock-bot-ui/src/departments/**"
+      - "fast-framework/packages/stock-bot-ui/src/components/**"
+    focused_check: "pnpm -C fast-framework exec vitest run src/tests/ui_quality_pass.test.ts"
+    regression_checks:
+      - "pnpm -C fast-framework/packages/stock-bot-ui build"
+      - "pnpm -C fast-framework test"
+
+  - paths:
+      - "fast-framework/packages/stock-bot-ui/src/state/**"
+    focused_check: "pnpm -C fast-framework exec vitest run src/ui_integration.test.ts"
+    regression_checks:
+      - "pnpm -C fast-framework test"
+
+  - paths:
+      - "**/package.json"
+      - "**/pnpm-lock.yaml"
+    focused_check: "pnpm -C fast-framework/packages/stock-bot-ui build"
+    regression_checks:
+      - "powershell -File scripts/dev/devctl.ps1 doctor"

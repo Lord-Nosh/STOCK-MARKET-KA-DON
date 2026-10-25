@@ -1,8 +1,10 @@
 import time
 import json
+import os
 import urllib.request
 from typing import Dict, Any, List, Optional
 from app.core.config import TRACKED_UNIVERSE
+from app.departments.market_data.replay_harness import ReplayMarketDataProvider
 
 class MarketDataDepartment:
     """
@@ -73,6 +75,10 @@ class MarketDataDepartment:
         return payload
 
     def _fetch_chart(self, ticker: str, interval: str, range_param: str) -> Optional[Dict[str, Any]]:
+        if os.getenv("SMKD_DATA_MODE") == "replay":
+            replay_provider = ReplayMarketDataProvider(mode="replay")
+            return replay_provider.fetch_replay_chart(ticker)
+
         url = f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?interval={interval}&range={range_param}"
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
         try:

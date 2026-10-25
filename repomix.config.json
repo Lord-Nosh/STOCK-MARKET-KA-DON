@@ -1,0 +1,29 @@
+{
+  "$schema": "https://repomix.com/schemas/repomix.json",
+  "output": {
+    "filePath": "repomix-output.xml",
+    "style": "xml",
+    "removeComments": false,
+    "removeEmptyLines": false,
+    "showLineNumbers": true
+  },
+  "include": [
+    "stock-signal-bot/backend/app/**/*.py",
+    "fast-framework/packages/stock-bot-ui/src/**/*.ts",
+    "docs/**/*.md"
+  ],
+  "ignore": {
+    "useGitignore": true,
+    "useDefaultPatterns": true,
+    "customPatterns": [
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/*.db",
+      "**/*.db.gz",
+      "**/backups/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/.task_ownership.json"
+    ]
+  }
+}

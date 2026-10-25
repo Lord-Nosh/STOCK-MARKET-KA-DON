@@ -1,0 +1,21 @@
+{
+  "symbol": "INFY",
+  "ticker": "INFY.NS",
+  "meta": {
+    "currency": "INR",
+    "symbol": "INFY.NS",
+    "regularMarketPrice": 1850.00
+  },
+  "timestamp": [],
+  "indicators": {
+    "quote": [
+      {
+        "open": [],
+        "high": [],
+        "low": [],
+        "close": [],
+        "volume": []
+      }
+    ]
+  }
+}
