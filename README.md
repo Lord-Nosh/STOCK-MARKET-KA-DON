@@ -29,6 +29,47 @@
 
 ---
 
+## 👨‍💻 Creator, Maintainers & Contributors
+
+**Created and maintained by [Danger Labs](https://github.com/dr-week).**
+
+SMKD is an evolving market-analysis and trading research project. Contributions, reproducible bug reports, test improvements, documentation fixes, and thoughtful feature proposals are welcome.
+
+- **Creator / maintainer:** [@dr-week](https://github.com/dr-week)
+- **Report a bug:** [Open an issue](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues/new)
+- **Suggest an improvement:** [Feature requests](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues)
+- **Contribute code:** [Open a pull request](https://github.com/dr-week/STOCK-MARKET-KA-DON/pulls)
+- **Contribution guide:** [CONTRIBUTING.md](CONTRIBUTING.md) *(add this file if it does not exist)*
+
+### Repository activity
+
+[![Stars](https://img.shields.io/github/stars/dr-week/STOCK-MARKET-KA-DON?style=social)](https://github.com/dr-week/STOCK-MARKET-KA-DON/stargazers)
+[![Forks](https://img.shields.io/github/forks/dr-week/STOCK-MARKET-KA-DON?style=social)](https://github.com/dr-week/STOCK-MARKET-KA-DON/forks)
+[![Issues](https://img.shields.io/github/issues/dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/pulls)
+[![Last Commit](https://img.shields.io/github/last-commit/dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/commits/main)
+
+### Meet the contributors
+
+Contributions are credited through GitHub's contributor history.
+
+[![Contributors](https://contrib.rocks/image?repo=dr-week/STOCK-MARKET-KA-DON)](https://github.com/dr-week/STOCK-MARKET-KA-DON/graphs/contributors)
+
+[View all contributors](https://github.com/dr-week/STOCK-MARKET-KA-DON/graphs/contributors) · [View commit history](https://github.com/dr-week/STOCK-MARKET-KA-DON/commits/main) · [View releases](https://github.com/dr-week/STOCK-MARKET-KA-DON/releases)
+
+### How to contribute
+
+1. Open or review an issue before starting a large change.
+2. Keep pull requests focused and explain the reason for the change.
+3. Include tests or reproducible steps when fixing a bug.
+4. Never commit API keys, broker credentials, tokens, or personal data.
+5. Do not introduce simulated market data into live application paths.
+6. Clearly state what you tested and what remains unverified.
+
+All market-data, signal-generation, and trading-related changes must preserve the project's safety and data-integrity requirements. See the [Issues](https://github.com/dr-week/STOCK-MARKET-KA-DON/issues) and [Pull Requests](https://github.com/dr-week/STOCK-MARKET-KA-DON/pulls) pages before contributing.
+
+---
+
 ## 📌 Executive Summary
 
 **SMKD** solves the core challenges faced by active retail and prop traders in Indian markets: execution lag, cognitive overload, emotional whipsaws, and scam-ridden signal services that ignore market friction and repainting. 
