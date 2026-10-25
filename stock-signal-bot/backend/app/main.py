@@ -3,6 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
+from app.db.database import init_db
 
 app = FastAPI(title="NSE Signal Engine", version="2.1.0")
 
@@ -22,6 +23,12 @@ app.add_middleware(
 )
 
 app.include_router(router, prefix="/api")
+
+
+@app.on_event("startup")
+def initialize_runtime_database() -> None:
+    """Create the runtime SQLite schema when the service starts."""
+    init_db()
 
 if __name__ == "__main__":
     import uvicorn
