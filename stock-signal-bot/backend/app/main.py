@@ -9,7 +9,7 @@ app = FastAPI(title="NSE Signal Engine", version="2.1.0")
 # Set SMKD_CORS_ORIGINS to a comma-separated list of trusted frontend origins.
 _raw_origins = os.getenv(
     "SMKD_CORS_ORIGINS",
-    "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000",
+    "http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,https://localhost,capacitor://localhost",
 )
 _allowed_origins = [origin.strip() for origin in _raw_origins.split(",") if origin.strip()]
 
